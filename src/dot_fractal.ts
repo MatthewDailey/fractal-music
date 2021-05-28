@@ -70,6 +70,6 @@ export function dotFractal(canvas: HTMLCanvasElement) {
   engine.addPoint({x: 10, y: 10})
 
   const runner = new NStepRunner(engine)
-  runner.run(100)
+  runner.run(1000)
 
 }
