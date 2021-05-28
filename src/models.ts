@@ -46,5 +46,5 @@ export interface CollisionDetector {
  * until there is collision. Another might be walking along a ray.
  */
 export interface NewPointAlgo {
-  generatePoint(existingPoints: Array<Point>, collisionDetector: CollisionDetector): Point
+  generatePoint(existingPoints: Array<Point>): Point
 }
