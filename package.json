@@ -1,7 +1,9 @@
 {
   "name": "fractal",
   "scripts": {
-    "serve": "python -m SimpleHTTPServer 8333"
+    "serve": "python -m SimpleHTTPServer 8333",
+    "build": "./node_modules/.bin/esbuild src/app.ts --bundle --outfile=build/app.js",
+    "watch": "fswatch -0 -r ./src/ | xargs -0 -n 1 -I {} npm run build"
   },
   "devDependencies": {
     "esbuild": "^0.12.4",
