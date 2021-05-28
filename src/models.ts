@@ -7,7 +7,7 @@ export type Point = { x: number, y: number }
  * Generic D is the type of metadata that can be passed to a render call.
  */
 export abstract class RenderablePoint<D> {
-  private context: CanvasRenderingContext2D
+  protected context: CanvasRenderingContext2D
 
   constructor(private canvas: HTMLCanvasElement, public point: Point) {}
 

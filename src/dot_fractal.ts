@@ -1,9 +1,13 @@
 import { CollisionDetector, NewPointAlgo, Point, RenderablePoint } from "./models"
+import { Engine } from "./engine"
+import { NStepRunner } from "./n_step_runner"
 
 export class DotRenderablePoint extends RenderablePoint<undefined> {
 
   initialRender() {
-    console.log(this.point)
+    this.context.beginPath()
+    this.context.arc(this.point.x, this.point.y, 5, 0, 2*Math.PI)
+    this.context.stroke()
   }
 
   updateRender() {
@@ -53,3 +57,19 @@ export class RandomWalk implements NewPointAlgo {
   }
 }
 
+export function dotFractal(canvas: HTMLCanvasElement) {
+  const stepSize = 10
+
+  const engine = new Engine(
+    new DotCollisionDetector(stepSize),
+    new RandomWalk(stepSize, canvas.width, canvas.height),
+    (c, p) => new DotRenderablePoint(c, p),
+    canvas
+  )
+
+  engine.addPoint({x: 10, y: 10})
+
+  const runner = new NStepRunner(engine)
+  runner.run(100)
+
+}
