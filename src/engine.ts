@@ -8,8 +8,8 @@ export class Engine<T extends RenderablePoint> {
               private renderablePointConstructor: (c: HTMLCanvasElement, p: Point) => T,
               private canvas: HTMLCanvasElement) {}
 
-  public addPoint(point: T) {
-    this.fractalPoints.push(point)
+  public addPoint(point: Point) {
+    this.fractalPoints.push(this.renderablePointConstructor(this.canvas, point))
   }
 
   public generatePoint() {
@@ -19,6 +19,6 @@ export class Engine<T extends RenderablePoint> {
   }
 
   public renderAndUpdateAll() {
-    this.fractalPoints.forEach(p => p.render(this.canvas))
+    this.fractalPoints.forEach(p => p.render())
   }
 }

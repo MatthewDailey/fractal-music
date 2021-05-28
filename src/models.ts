@@ -7,11 +7,11 @@ export type Point = { x: number, y: number }
 export abstract class RenderablePoint {
   private context: CanvasRenderingContext2D
 
-  constructor(public point: Point, private canvas: HTMLCanvasElement) {}
+  constructor(private canvas: HTMLCanvasElement, public point: Point) {}
 
-  render(canvas: HTMLCanvasElement) {
+  public render() {
     if (!this.context) {
-      this.context = canvas.getContext('2d') as CanvasRenderingContext2D
+      this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D
       this.initialRender()
     } else {
       this.updateRender()
