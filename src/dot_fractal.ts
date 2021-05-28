@@ -1,6 +1,6 @@
 import { CollisionDetector, NewPointAlgo, Point, RenderablePoint } from "./models"
 
-export class DotRenderablePoint extends RenderablePoint {
+export class DotRenderablePoint extends RenderablePoint<undefined> {
 
   initialRender() {
     console.log(this.point)

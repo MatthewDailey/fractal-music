@@ -2,31 +2,33 @@
 export type Point = { x: number, y: number }
 
 /**
- * Logic for how to render a point in the fractal on an html canvase.
+ * Logic for how to render a point in the fractal on an html canvas.
+ *
+ * Generic D is the type of metadata that can be passed to a render call.
  */
-export abstract class RenderablePoint {
+export abstract class RenderablePoint<D> {
   private context: CanvasRenderingContext2D
 
   constructor(private canvas: HTMLCanvasElement, public point: Point) {}
 
-  public render() {
+  public render(data: D) {
     if (!this.context) {
       this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D
-      this.initialRender()
+      this.initialRender(data)
     } else {
-      this.updateRender()
+      this.updateRender(data)
     }
   }
 
   /**
    * Draw the initial fractal point on the canvas.
    */
-  abstract initialRender()
+  abstract initialRender(data: D)
 
   /**
    * Update the rendered point.
    */
-  abstract updateRender()
+  abstract updateRender(data: D)
 }
 
 /**

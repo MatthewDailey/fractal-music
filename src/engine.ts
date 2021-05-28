@@ -1,6 +1,6 @@
 import { CollisionDetector, NewPointAlgo, Point, RenderablePoint } from "./models"
 
-export class Engine<T extends RenderablePoint> {
+export class Engine<D, T extends RenderablePoint<D>> {
   private fractalPoints: Array<T> = []
 
   constructor(private collisionDetector: CollisionDetector,
@@ -18,7 +18,7 @@ export class Engine<T extends RenderablePoint> {
     this.fractalPoints.push(this.renderablePointConstructor(this.canvas, point))
   }
 
-  public renderAndUpdateAll() {
-    this.fractalPoints.forEach(p => p.render())
+  public renderAndUpdateAll(data: D) {
+    this.fractalPoints.forEach(p => p.render(data))
   }
 }
