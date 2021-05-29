@@ -9,28 +9,36 @@ type Data = {
 }
 
 export class DotRenderablePoint extends RenderablePoint<Data> {
+  private isFirstScale: boolean = true
+
   constructor(canvas: HTMLCanvasElement, point: Point, private radius: number) {
     super(canvas, point);
   }
 
-  initialRender(data) {
+  render(data: Data) {
     if (data.shouldShow) {
-      this.drawCircle()
+      this.drawCircle(data.scale)
     }
   }
 
   private drawCircle(scale: number = 1) {
+    // clear the circle
+    this.context.beginPath()
+    this.context.arc(this.point.x, this.point.y, this.radius + 1, 0, 2 * Math.PI)
+    this.context.fillStyle = '#FFF'
+    this.context.fill()
+
+    // draw the expanding circle
     this.context.beginPath()
     this.context.arc(this.point.x, this.point.y, this.radius * scale, 0, 2 * Math.PI)
-    this.context.fill()
     this.context.stroke()
-    this.context.save()
-  }
+    if (this.isFirstScale) {
+      this.context.fillStyle = '#000'
+      this.context.fill()
 
-  updateRender(data: Data) {
-    if (data.shouldShow) {
-      this.context.restore()
-      this.drawCircle(data.scale)
+      if (scale > 0.95) {
+        this.isFirstScale = false
+      }
     }
   }
 }
