@@ -30,7 +30,6 @@ export class RandomWalk implements NewPointAlgo {
       }
     }
 
-    console.log("generating point")
     // Make sure initial point has a good distance from any existing dots. This provides
     // coverage so once dots are tightly packed we can't start a walk in a place that is
     // too tightly packed to move to a fitting location.
@@ -38,7 +37,6 @@ export class RandomWalk implements NewPointAlgo {
       () => !!isAnyCollision(currentPoint, this.radius * 2),
       () => currentPoint = this.randomPoint()
     )
-    console.log("got initial point", currentPoint)
 
     const takeStep = () => {
       const radianDirection = Math.random() * (2 * Math.PI)
@@ -59,7 +57,6 @@ export class RandomWalk implements NewPointAlgo {
       collisionPoint = isAnyCollision(currentPoint, this.radius)
     }
     currentPoint = collisionPoint
-    console.log("found collision")
 
     // Make sure no overlaps. Can overlap if initial point is in between other points.
     let newCollisionPoint = isAnyCollision(currentPoint, this.radius)
@@ -73,10 +70,8 @@ export class RandomWalk implements NewPointAlgo {
     )
 
     if (isAnyCollision(currentPoint, this.radius)) {
-      console.log('failed to find valid position')
       return undefined
     }
-    console.log("found no overlaps")
     return currentPoint
   }
 }
