@@ -11,7 +11,7 @@ export abstract class RenderablePoint<D> {
 
   constructor(private canvas: HTMLCanvasElement, public point: Point) {}
 
-  public render(data: D) {
+  public render(data?: D) {
     if (!this.context) {
       this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D
       this.initialRender(data)
@@ -23,12 +23,12 @@ export abstract class RenderablePoint<D> {
   /**
    * Draw the initial fractal point on the canvas.
    */
-  abstract initialRender(data: D)
+  abstract initialRender(data?: D)
 
   /**
    * Update the rendered point.
    */
-  abstract updateRender(data: D)
+  abstract updateRender(data?: D)
 }
 
 /**
@@ -50,4 +50,8 @@ export interface CollisionDetector {
  */
 export interface NewPointAlgo {
   generatePoint(existingPoints: Array<Point>): Point|undefined
+}
+
+export interface RenderDataProvider<D> {
+  getData(point: Point, index: number): D|undefined
 }

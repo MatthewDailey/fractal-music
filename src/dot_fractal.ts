@@ -1,9 +1,9 @@
-import { CollisionDetector, NewPointAlgo, Point, RenderablePoint } from "./models"
+import { CollisionDetector, NewPointAlgo, Point, RenderablePoint, RenderDataProvider } from "./models"
 import { Engine } from "./engine"
 import { NStepRunner } from "./n_step_runner"
 import { RandomWalk } from "./new_point_algos/random_walk"
 
-export class DotRenderablePoint extends RenderablePoint<undefined> {
+export class DotRenderablePoint extends RenderablePoint<{ pulse: boolean }|undefined> {
 
   constructor(canvas: HTMLCanvasElement, point: Point, private radius: number) {
     super(canvas, point);
@@ -15,9 +15,11 @@ export class DotRenderablePoint extends RenderablePoint<undefined> {
     this.context.stroke()
   }
 
-  updateRender() {
+  updateRender(data) {
+    if (data && data.pulse) {
+      this.context.translate(this.radius, this.radius)
+    }
   }
-
 }
 
 export class DotCollisionDetector implements CollisionDetector {
@@ -34,6 +36,11 @@ export class DotCollisionDetector implements CollisionDetector {
   }
 }
 
+class DotDataProvider implements RenderDataProvider<any> {
+  getData(point: Point, index: number): any | undefined {
+    return undefined;
+  }
+}
 
 export function dotFractal(canvas: HTMLCanvasElement) {
   const radius = 10
@@ -41,6 +48,7 @@ export function dotFractal(canvas: HTMLCanvasElement) {
   const engine = new Engine(
     new RandomWalk(radius, canvas.width, canvas.height, new DotCollisionDetector()),
     (c, p) => new DotRenderablePoint(c, p, radius),
+    new DotDataProvider(),
     canvas
   )
 

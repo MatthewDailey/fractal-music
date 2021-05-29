@@ -1,10 +1,12 @@
-import { CollisionDetector, NewPointAlgo, Point, RenderablePoint } from "./models"
+import { CollisionDetector, NewPointAlgo, Point, RenderablePoint, RenderDataProvider } from "./models"
 
-export class Engine<D, T extends RenderablePoint<D>> {
+export class Engine<D, T extends RenderablePoint<D|undefined>> {
   private fractalPoints: Array<T> = []
+  private animationLoopOn = false
 
   constructor(private newPointAlgo: NewPointAlgo,
               private renderablePointConstructor: (c: HTMLCanvasElement, p: Point) => T,
+              private renderDataProvider: RenderDataProvider<D>,
               private canvas: HTMLCanvasElement) {}
 
   public addPoint(point: Point) {
@@ -21,9 +23,23 @@ export class Engine<D, T extends RenderablePoint<D>> {
     return false
   }
 
-  public renderAndUpdateAll(data: D) {
-    this.fractalPoints.forEach(p => p.render(data))
+  public renderAndUpdateAll(data?: D) {
+    window.requestAnimationFrame(() => this.fractalPoints.forEach((p, i) => {
+      p.render(data || this.renderDataProvider.getData(p.point, i))
+    }))
   }
+
+  public startAnimationLoop = () => {
+    this.animationLoopOn = true
+
+    const render = () => {
+      this.renderAndUpdateAll()
+      window.requestAnimationFrame(render)
+    }
+    window.requestAnimationFrame(render)
+  }
+
+  private stopAnimationLoop = () => this.animationLoopOn = false
 
   public setPoints(points: Array<Point>) {
     this.fractalPoints = points.map(p => this.renderablePointConstructor(this.canvas, p))
