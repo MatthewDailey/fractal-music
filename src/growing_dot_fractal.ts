@@ -1,4 +1,6 @@
 import { Point, RenderablePoint, RenderProvider } from "./models"
+import { Engine } from "./engine"
+import { RadialCollisionDetector, RadialRandomWalk } from "./new_point_algos/random_walk"
 
 
 type Data = {
@@ -9,7 +11,7 @@ type Data = {
   fillStyle?: string
 }
 
-export class DotRenderablePoint extends RenderablePoint<Data> {
+export class GrowingDotRenderablePoint extends RenderablePoint<Data> {
   constructor(canvas: HTMLCanvasElement, point: Point, private radius: number) {
     super(canvas, point);
   }
@@ -35,14 +37,14 @@ export class DotRenderablePoint extends RenderablePoint<Data> {
 
 }
 
-export class DotRenderProvider implements RenderProvider<Data, DotRenderablePoint> {
+export class GrowingDotRenderProvider implements RenderProvider<Data, GrowingDotRenderablePoint> {
   private startTimeMs: number|null = null
   private addTimes: { [k: number]: number } = {}
 
   constructor(private radius: number, private flashTimeStepMs: number = 1000, private addTimeStepMs: number = 1000) {}
 
-  getPoint(c: HTMLCanvasElement, p: Point): DotRenderablePoint {
-    return new DotRenderablePoint(c, p, this.radius);
+  getPoint(c: HTMLCanvasElement, p: Point): GrowingDotRenderablePoint {
+    return new GrowingDotRenderablePoint(c, p, this.radius);
   }
 
   getData(point: Point, index: number, length: number): Data {
@@ -75,4 +77,13 @@ export class DotRenderProvider implements RenderProvider<Data, DotRenderablePoin
 
   onStopAnimationLoop(): void {
   }
+}
+
+export function getFractalEngine(canvas: HTMLCanvasElement) {
+  const radius = 2
+  return new Engine(
+    new RadialRandomWalk(radius, canvas.width, canvas.height, new RadialCollisionDetector()),
+    new GrowingDotRenderProvider(radius, 500, 100),
+    canvas
+  )
 }
