@@ -13,8 +13,5 @@ const engine = new Engine(
   canvas
 )
 
-engine.addPoint({ x: 150, y: 240 })
-engine.run(5000)
-
 // @ts-ignore
 window.engine = engine
