@@ -7,9 +7,13 @@ import { ConsoleRunner } from "./console_runner"
 
 export class DotRenderablePoint extends RenderablePoint<undefined> {
 
+  constructor(canvas: HTMLCanvasElement, point: Point, private radius: number) {
+    super(canvas, point);
+  }
+
   initialRender() {
     this.context.beginPath()
-    this.context.arc(this.point.x, this.point.y, 5, 0, 2*Math.PI)
+    this.context.arc(this.point.x, this.point.y, this.radius, 0, 2*Math.PI)
     this.context.stroke()
   }
 
@@ -34,9 +38,11 @@ export class DotCollisionDetector implements CollisionDetector {
 
 
 export function dotFractal(canvas: HTMLCanvasElement) {
+  const radius = 10
+
   const engine = new Engine(
-    new RandomWalk(5, canvas.width, canvas.height, new DotCollisionDetector(5)),
-    (c, p) => new DotRenderablePoint(c, p),
+    new RandomWalk(radius, canvas.width, canvas.height, new DotCollisionDetector(radius)),
+    (c, p) => new DotRenderablePoint(c, p, radius),
     canvas
   )
 
