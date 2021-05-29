@@ -36,7 +36,10 @@ export abstract class RenderablePoint<D> {
  * a random walk to add a point we there is a collision and the point should stop there.
  */
 export interface CollisionDetector {
-  isCollision(a: Point, b: Point)
+  /**
+   * @return Point of collision adjusted to be just touching and not overlapping. Undefined if no collision
+   */
+  isCollision(existing: Point, newPoint: Point) : Point|undefined
 }
 
 /**
