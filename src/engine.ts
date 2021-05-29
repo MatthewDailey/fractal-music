@@ -30,11 +30,15 @@ export class Engine<D, T extends RenderablePoint<D|undefined>> {
     console.log(`Done adding ${nSteps} points`)
   }
 
+  private onNewPointFromClick = (p: Point) => {}
+  public setOnNewPointFromClick = (f: (p: Point) => void) => this.onNewPointFromClick = f
+
   public startCollectingPointsFromClicks = () => {
     this.canvas.onclick = (e) => {
       const newPoint = { x: e.clientX, y: e.clientY }
       console.log("Adding point from click", newPoint)
       this.addPoint(newPoint)
+      this.onNewPointFromClick(newPoint)
     }
   }
 

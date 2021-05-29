@@ -79,7 +79,7 @@ export class GrowingDotRenderProvider implements RenderProvider<Data, GrowingDot
   }
 }
 
-export function getFractalEngine(canvas: HTMLCanvasElement) {
+export function getGrowingEngine(canvas: HTMLCanvasElement) {
   const radius = 2
   return new Engine(
     new RadialRandomWalk(radius, canvas.width, canvas.height, new RadialCollisionDetector()),
