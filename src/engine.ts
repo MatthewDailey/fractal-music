@@ -1,23 +1,22 @@
-import { CollisionDetector, NewPointAlgo, Point, RenderablePoint, RenderDataProvider } from "./models"
+import { CollisionDetector, NewPointAlgo, Point, RenderablePoint, RenderProvider } from "./models"
 
 export class Engine<D, T extends RenderablePoint<D|undefined>> {
   private fractalPoints: Array<T> = []
   private animationLoopOn = false
 
   constructor(private newPointAlgo: NewPointAlgo,
-              private renderablePointConstructor: (c: HTMLCanvasElement, p: Point) => T,
-              private renderDataProvider: RenderDataProvider<D>,
+              private renderProvider: RenderProvider<D, T>,
               private canvas: HTMLCanvasElement) {}
 
   public addPoint(point: Point) {
-    this.fractalPoints.push(this.renderablePointConstructor(this.canvas, point))
+    this.fractalPoints.push(this.renderProvider.getPoint(this.canvas, point))
   }
 
   public generatePoint() {
     const point = this.newPointAlgo.generatePoint(
       this.fractalPoints.map(p => p.point))
     if (point) {
-      this.fractalPoints.push(this.renderablePointConstructor(this.canvas, point))
+      this.fractalPoints.push(this.renderProvider.getPoint(this.canvas, point))
       return true
     }
     return false
@@ -25,21 +24,21 @@ export class Engine<D, T extends RenderablePoint<D|undefined>> {
 
   private renderAndUpdateAll() {
     window.requestAnimationFrame(() => this.fractalPoints.forEach((p, i) => {
-      p.render(this.renderDataProvider.getData(p.point, i))
+      p.render(this.renderProvider.getData(p.point, i))
     }))
   }
 
   public startAnimationLoop = () => {
     if (!this.animationLoopOn) {
       this.animationLoopOn = true
-      this.renderDataProvider.onStartAnimationLoop()
+      this.renderProvider.onStartAnimationLoop()
 
       const render = () => {
         this.renderAndUpdateAll()
         if (this.animationLoopOn) {
           window.requestAnimationFrame(render)
         } else {
-          this.renderDataProvider.onStopAnimationLoop()
+          this.renderProvider.onStopAnimationLoop()
         }
       }
       window.requestAnimationFrame(render)
@@ -51,7 +50,7 @@ export class Engine<D, T extends RenderablePoint<D|undefined>> {
   }
 
   public setPoints(points: Array<Point>) {
-    this.fractalPoints = points.map(p => this.renderablePointConstructor(this.canvas, p))
+    this.fractalPoints = points.map(p => this.renderProvider.getPoint(this.canvas, p))
   }
 
   public getPointsAsJson = () => JSON.stringify(this.fractalPoints.map(p => p.point))

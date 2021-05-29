@@ -1,5 +1,17 @@
 import { CollisionDetector, NewPointAlgo, Point } from "../models"
 
+export class RadialCollisionDetector implements CollisionDetector {
+  isCollision(a: Point, b: Point, radius: number): Point|undefined {
+    const dx = b.x - a.x
+    const dy = b.y - a.y
+    if (2*radius > Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) {
+      const theta = Math.atan2(dy, dx)
+      const dist = 2*radius + 1
+      return { x: a.x + (dist*Math.cos(theta)), y: a.y + (dist*Math.sin(theta)) }
+    }
+  }
+}
+
 const whileShortCircuit = <T>(whileTrue: () => boolean, block: () => T | undefined): T|undefined => {
   let attempts = 0
   let result: T|undefined = undefined
