@@ -1,36 +1,42 @@
 import { CollisionDetector, NewPointAlgo, Point } from "../models"
 
 export class RandomWalk implements NewPointAlgo {
-  constructor(private stepSize: number, private xMax: number, private yMax: number, private collisionDetector: CollisionDetector) {}
+  constructor(private radius: number, private xMax: number, private yMax: number, private collisionDetector: CollisionDetector) {}
 
   private randomPoint(): Point {
-    return { x: Math.random() * this.xMax, y: Math.random() * this.yMax }
+    const positionWithRadiusBuffer = (max: number) =>
+      (Math.random() * (max - 2*this.radius)) + this.radius
+    return { x: positionWithRadiusBuffer(this.xMax), y: positionWithRadiusBuffer(this.yMax) }
   }
 
-  generatePoint(existingPoints: Array<Point>): Point {
+  generatePoint(existingPoints: Array<Point>): Point|undefined {
     let currentPoint = this.randomPoint()
-    const isAnyCollision = (curr: Point) => {
+    const isAnyCollision = (curr: Point, radius: number) => {
       for (let p of existingPoints) {
-        const collisionPoint = this.collisionDetector.isCollision(p, curr)
+        const collisionPoint = this.collisionDetector.isCollision(p, curr, radius)
         if (collisionPoint) {
           return collisionPoint
         }
       }
     }
 
-    // Make sure initial point isn't overlapping existing points.
-    while (isAnyCollision(currentPoint)) {
+    console.log("generating point")
+    // Make sure initial point has a good distance from any existing dots. This provides
+    // coverage so once dots are tightly packed we can't start a walk in a place that is
+    // too tightly packed to move to a fitting location.
+    while (isAnyCollision(currentPoint, this.radius * 2)) {
       currentPoint = this.randomPoint()
     }
+    console.log("got initial point", currentPoint)
 
     const takeStep = () => {
       const radianDirection = Math.random() * (2 * Math.PI)
-      currentPoint.x = currentPoint.x + (Math.cos(radianDirection) * this.stepSize)
-      currentPoint.y = currentPoint.y + (Math.sin(radianDirection) * this.stepSize)
+      currentPoint.x = currentPoint.x + (Math.cos(radianDirection) * this.radius)
+      currentPoint.y = currentPoint.y + (Math.sin(radianDirection) * this.radius)
     }
 
     // Find a point of collision
-    let collisionPoint = isAnyCollision(currentPoint)
+    let collisionPoint = isAnyCollision(currentPoint, this.radius)
     while (!collisionPoint) {
       takeStep()
 
@@ -39,17 +45,23 @@ export class RandomWalk implements NewPointAlgo {
         currentPoint = this.randomPoint()
       }
 
-      collisionPoint = isAnyCollision(currentPoint)
+      collisionPoint = isAnyCollision(currentPoint, this.radius)
     }
     currentPoint = collisionPoint
+    console.log("found collision")
 
-    // Make sure no overlaps
-    let newCollisionPoint = isAnyCollision(currentPoint)
+    // Make sure no overlaps. Can overlap if initial point is in between other points.
+    let attemptCnt = 0
+    let newCollisionPoint = isAnyCollision(currentPoint, this.radius)
     while (newCollisionPoint) {
       currentPoint = newCollisionPoint
-      newCollisionPoint = isAnyCollision(currentPoint)
-    }
+      console.log(currentPoint)
+      newCollisionPoint = isAnyCollision(currentPoint, this.radius)
 
+      attemptCnt++
+      if (attemptCnt > 100) return undefined
+    }
+    console.log("found no overlaps")
     return currentPoint
   }
 }

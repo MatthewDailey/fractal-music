@@ -2,8 +2,6 @@ import { CollisionDetector, NewPointAlgo, Point, RenderablePoint } from "./model
 import { Engine } from "./engine"
 import { NStepRunner } from "./n_step_runner"
 import { RandomWalk } from "./new_point_algos/random_walk"
-import { RayWalk } from "./new_point_algos/ray_walk"
-import { ConsoleRunner } from "./console_runner"
 
 export class DotRenderablePoint extends RenderablePoint<undefined> {
 
@@ -23,14 +21,14 @@ export class DotRenderablePoint extends RenderablePoint<undefined> {
 }
 
 export class DotCollisionDetector implements CollisionDetector {
-  constructor(private radius: number) {}
+  constructor() {}
 
-  isCollision(a: Point, b: Point): Point|undefined {
+  isCollision(a: Point, b: Point, radius: number): Point|undefined {
     const dx = b.x - a.x
     const dy = b.y - a.y
-    if (2*this.radius > Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) {
+    if (2*radius > Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) {
       const theta = Math.atan2(dy, dx)
-      const dist = 2*this.radius + 1
+      const dist = 2*radius + 1
       return { x: a.x + (dist*Math.cos(theta)), y: a.y + (dist*Math.sin(theta)) }
     }
   }
@@ -41,15 +39,15 @@ export function dotFractal(canvas: HTMLCanvasElement) {
   const radius = 10
 
   const engine = new Engine(
-    new RandomWalk(radius, canvas.width, canvas.height, new DotCollisionDetector(radius)),
+    new RandomWalk(radius, canvas.width, canvas.height, new DotCollisionDetector()),
     (c, p) => new DotRenderablePoint(c, p, radius),
     canvas
   )
 
-  engine.addPoint({x: 10, y: 10})
+  const runner = new NStepRunner(engine, canvas)
 
-  const runner = new NStepRunner(engine)
-  runner.run(30)
   // @ts-ignore
-  window.enginer = engine
+  window.engine = engine
+  // @ts-ignore
+  window.runner = runner
 }

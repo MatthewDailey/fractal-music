@@ -14,7 +14,11 @@ export class Engine<D, T extends RenderablePoint<D>> {
   public generatePoint() {
     const point = this.newPointAlgo.generatePoint(
       this.fractalPoints.map(p => p.point))
-    this.fractalPoints.push(this.renderablePointConstructor(this.canvas, point))
+    if (point) {
+      this.fractalPoints.push(this.renderablePointConstructor(this.canvas, point))
+      return true
+    }
+    return false
   }
 
   public renderAndUpdateAll(data: D) {

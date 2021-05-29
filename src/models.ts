@@ -39,7 +39,7 @@ export interface CollisionDetector {
   /**
    * @return Point of collision adjusted to be just touching and not overlapping. Undefined if no collision
    */
-  isCollision(existing: Point, newPoint: Point) : Point|undefined
+  isCollision(existing: Point, newPoint: Point, distance: number) : Point|undefined
 }
 
 /**
@@ -49,5 +49,5 @@ export interface CollisionDetector {
  * until there is collision. Another might be walking along a ray.
  */
 export interface NewPointAlgo {
-  generatePoint(existingPoints: Array<Point>): Point
+  generatePoint(existingPoints: Array<Point>): Point|undefined
 }
