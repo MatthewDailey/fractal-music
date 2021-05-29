@@ -40,6 +40,12 @@ class DotDataProvider implements RenderDataProvider<any> {
   getData(point: Point, index: number): any | undefined {
     return undefined;
   }
+
+  onStartAnimationLoop(): void {
+  }
+
+  onStopAnimationLoop(): void {
+  }
 }
 
 export function dotFractal(canvas: HTMLCanvasElement) {

@@ -7,9 +7,9 @@ export class NStepRunner {
     for (let i = 0; i < nSteps; i++) {
       if (this.engine.generatePoint()) {
         console.log("added point")
-        this.engine.renderAndUpdateAll(undefined)
       }
     }
+    this.engine.startAnimationLoop()
     console.log(`Done adding ${nSteps} dots`)
   }
 
@@ -18,7 +18,6 @@ export class NStepRunner {
       const newPoint = { x: e.clientX, y: e.clientY }
       console.log("Adding point from click", newPoint)
       this.engine.addPoint(newPoint)
-      this.engine.renderAndUpdateAll(undefined)
     }
   }
 

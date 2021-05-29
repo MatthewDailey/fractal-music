@@ -23,23 +23,32 @@ export class Engine<D, T extends RenderablePoint<D|undefined>> {
     return false
   }
 
-  public renderAndUpdateAll(data?: D) {
+  private renderAndUpdateAll() {
     window.requestAnimationFrame(() => this.fractalPoints.forEach((p, i) => {
-      p.render(data || this.renderDataProvider.getData(p.point, i))
+      p.render(this.renderDataProvider.getData(p.point, i))
     }))
   }
 
   public startAnimationLoop = () => {
-    this.animationLoopOn = true
+    if (!this.animationLoopOn) {
+      this.animationLoopOn = true
+      this.renderDataProvider.onStartAnimationLoop()
 
-    const render = () => {
-      this.renderAndUpdateAll()
+      const render = () => {
+        this.renderAndUpdateAll()
+        if (this.animationLoopOn) {
+          window.requestAnimationFrame(render)
+        } else {
+          this.renderDataProvider.onStopAnimationLoop()
+        }
+      }
       window.requestAnimationFrame(render)
     }
-    window.requestAnimationFrame(render)
   }
 
-  private stopAnimationLoop = () => this.animationLoopOn = false
+  public stopAnimationLoop = () => {
+    this.animationLoopOn = false
+  }
 
   public setPoints(points: Array<Point>) {
     this.fractalPoints = points.map(p => this.renderablePointConstructor(this.canvas, p))

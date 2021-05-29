@@ -53,5 +53,7 @@ export interface NewPointAlgo {
 }
 
 export interface RenderDataProvider<D> {
+  onStartAnimationLoop: () => void
+  onStopAnimationLoop: () => void
   getData(point: Point, index: number): D|undefined
 }
