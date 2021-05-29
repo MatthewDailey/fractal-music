@@ -22,7 +22,7 @@ const whileShortCircuit = <T>(whileTrue: () => boolean, block: () => T | undefin
   return result
 }
 
-export class RandomWalk implements NewPointAlgo {
+export class RadialRandomWalk implements NewPointAlgo {
   constructor(private radius: number, private xMax: number, private yMax: number, private collisionDetector: CollisionDetector) {}
 
   private randomPoint(): Point {
@@ -76,7 +76,6 @@ export class RandomWalk implements NewPointAlgo {
       () => !!newCollisionPoint,
       () => {
         currentPoint = newCollisionPoint!
-        console.log(currentPoint)
         newCollisionPoint = isAnyCollision(currentPoint, this.radius)
       }
     )

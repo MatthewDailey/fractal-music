@@ -1,4 +1,4 @@
-import { CollisionDetector, NewPointAlgo, Point, RenderablePoint, RenderProvider } from "./models"
+import { NewPointAlgo, Point, RenderablePoint, RenderProvider } from "./models"
 
 export class Engine<D, T extends RenderablePoint<D|undefined>> {
   private fractalPoints: Array<T> = []
@@ -20,6 +20,26 @@ export class Engine<D, T extends RenderablePoint<D|undefined>> {
       return true
     }
     return false
+  }
+
+  public run(nSteps: number) {
+    for (let i = 0; i < nSteps; i++) {
+      this.generatePoint()
+      console.log("Added point...")
+    }
+    console.log(`Done adding ${nSteps} points`)
+  }
+
+  public startCollectingPointsFromClicks = () => {
+    this.canvas.onclick = (e) => {
+      const newPoint = { x: e.clientX, y: e.clientY }
+      console.log("Adding point from click", newPoint)
+      this.addPoint(newPoint)
+    }
+  }
+
+  public stopCollectingPointsFromClicks = () => {
+    this.canvas.onclick = () => {}
   }
 
   private renderAndUpdateAll() {
