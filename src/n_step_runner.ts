@@ -6,6 +6,7 @@ export class NStepRunner {
   public run(nSteps: number) {
     for (let i = 0; i < nSteps; i++) {
       this.engine.generatePoint()
+      console.log("added point")
     }
     this.engine.renderAndUpdateAll(undefined)
   }

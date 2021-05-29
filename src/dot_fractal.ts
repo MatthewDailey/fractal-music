@@ -21,11 +21,13 @@ export class DotRenderablePoint extends RenderablePoint<undefined> {
 export class DotCollisionDetector implements CollisionDetector {
   constructor(private radius: number) {}
 
-  isCollision(a: Point, b: Point) {
-    const dx = a.x - b.x
-    const dy = a.y - b.y
+  isCollision(a: Point, b: Point): Point|undefined {
+    const dx = b.x - a.x
+    const dy = b.y - a.y
     if (2*this.radius > Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) {
-      return b
+      const theta = Math.atan2(dy, dx)
+      const dist = 2*this.radius + 1
+      return { x: a.x + (dist*Math.cos(theta)), y: a.y + (dist*Math.sin(theta)) }
     }
   }
 }
@@ -33,14 +35,15 @@ export class DotCollisionDetector implements CollisionDetector {
 
 export function dotFractal(canvas: HTMLCanvasElement) {
   const engine = new Engine(
-    new RandomWalk(3, canvas.width, canvas.height, new DotCollisionDetector(5)),
+    new RandomWalk(5, canvas.width, canvas.height, new DotCollisionDetector(5)),
     (c, p) => new DotRenderablePoint(c, p),
     canvas
   )
 
   engine.addPoint({x: 10, y: 10})
 
-  const runner = new ConsoleRunner(engine, canvas)
+  const runner = new NStepRunner(engine)
+  runner.run(30)
   // @ts-ignore
-  window.runner = runner
+  window.enginer = engine
 }
