@@ -46,7 +46,7 @@ export class DotRenderablePoint extends RenderablePoint<Data> {
 export class DotRenderProvider implements RenderProvider<Data, DotRenderablePoint> {
   private startTimeMs: number|null = null
 
-  constructor(private radius: number) {}
+  constructor(private radius: number, private flashTimeStepMs: number = 1000, private addTimeStepMs: number = 1000) {}
 
   getPoint(c: HTMLCanvasElement, p: Point): DotRenderablePoint {
     return new DotRenderablePoint(c, p, this.radius);
@@ -56,9 +56,13 @@ export class DotRenderProvider implements RenderProvider<Data, DotRenderablePoin
     if (!this.startTimeMs) return { shouldShow: false }
 
     const dt = Date.now() - this.startTimeMs
-    const secSinceStart = dt / 1000
-    if (secSinceStart >= index) {
-      return { shouldShow: true, scale: ((dt % 1000) / 1000) }
+    const stepSinceStart = dt / this.addTimeStepMs
+    if (stepSinceStart >= index) {
+      if (dt % this.flashTimeStepMs < this.flashTimeStepMs / 2) { // increasing
+        return { shouldShow: true, scale: ((dt % (this.flashTimeStepMs/2)) / (this.flashTimeStepMs/2)) }
+      } else { // decreasing
+        return { shouldShow: true, scale: 1 - ((dt % (this.flashTimeStepMs/2)) / (this.flashTimeStepMs/2)) }
+      }
     }
 
     return { shouldShow: false }
