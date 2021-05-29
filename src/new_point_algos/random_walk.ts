@@ -1,5 +1,15 @@
 import { CollisionDetector, NewPointAlgo, Point } from "../models"
 
+const whileShortCircuit = <T>(whileTrue: () => boolean, block: () => T | undefined): T|undefined => {
+  let attempts = 0
+  let result: T|undefined = undefined
+  while (!result && attempts < 100 && whileTrue()) {
+    result = block()
+    attempts++
+  }
+  return result
+}
+
 export class RandomWalk implements NewPointAlgo {
   constructor(private radius: number, private xMax: number, private yMax: number, private collisionDetector: CollisionDetector) {}
 
@@ -24,9 +34,10 @@ export class RandomWalk implements NewPointAlgo {
     // Make sure initial point has a good distance from any existing dots. This provides
     // coverage so once dots are tightly packed we can't start a walk in a place that is
     // too tightly packed to move to a fitting location.
-    while (isAnyCollision(currentPoint, this.radius * 2)) {
-      currentPoint = this.randomPoint()
-    }
+    whileShortCircuit(
+      () => !!isAnyCollision(currentPoint, this.radius * 2),
+      () => currentPoint = this.randomPoint()
+    )
     console.log("got initial point", currentPoint)
 
     const takeStep = () => {
@@ -51,15 +62,19 @@ export class RandomWalk implements NewPointAlgo {
     console.log("found collision")
 
     // Make sure no overlaps. Can overlap if initial point is in between other points.
-    let attemptCnt = 0
     let newCollisionPoint = isAnyCollision(currentPoint, this.radius)
-    while (newCollisionPoint) {
-      currentPoint = newCollisionPoint
-      console.log(currentPoint)
-      newCollisionPoint = isAnyCollision(currentPoint, this.radius)
+    whileShortCircuit(
+      () => !!newCollisionPoint,
+      () => {
+        currentPoint = newCollisionPoint!
+        console.log(currentPoint)
+        newCollisionPoint = isAnyCollision(currentPoint, this.radius)
+      }
+    )
 
-      attemptCnt++
-      if (attemptCnt > 100) return undefined
+    if (isAnyCollision(currentPoint, this.radius)) {
+      console.log('failed to find valid position')
+      return undefined
     }
     console.log("found no overlaps")
     return currentPoint
