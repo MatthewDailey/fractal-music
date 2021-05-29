@@ -44,7 +44,7 @@ export class Engine<D, T extends RenderablePoint<D|undefined>> {
 
   private renderAndUpdateAll() {
     window.requestAnimationFrame(() => this.fractalPoints.forEach((p, i) => {
-      p.render(this.renderProvider.getData(p.point, i))
+      p.render(this.renderProvider.getData(p.point, i, this.fractalPoints.length))
     }))
   }
 

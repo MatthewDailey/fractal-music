@@ -41,5 +41,5 @@ export interface RenderProvider<D, T extends RenderablePoint<D>> {
   onStartAnimationLoop: () => void
   onStopAnimationLoop: () => void
   getPoint(c: HTMLCanvasElement, p: Point): T
-  getData(point: Point, index: number): D|undefined
+  getData(point: Point, index: number, length: number): D|undefined
 }
