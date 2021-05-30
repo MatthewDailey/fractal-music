@@ -41,7 +41,10 @@ export class GrowingDotRenderProvider implements RenderProvider<Data, GrowingDot
   private startTimeMs: number|null = null
   private addTimes: { [k: number]: number } = {}
 
-  constructor(private radius: number, private flashTimeStepMs: number = 1000, private addTimeStepMs: number = 1000) {}
+  constructor(private canvas: HTMLCanvasElement,
+              private radius: number,
+              private flashTimeStepMs: number = 1000,
+              private addTimeStepMs: number = 1000) {}
 
   reset() {
     this.startTimeMs = null
@@ -52,11 +55,11 @@ export class GrowingDotRenderProvider implements RenderProvider<Data, GrowingDot
     return numDots * this.addTimeStepMs + this.flashTimeStepMs
   }
 
-  getPoint(c: HTMLCanvasElement, p: Point): GrowingDotRenderablePoint {
+  private getPoint(c: HTMLCanvasElement, p: Point): GrowingDotRenderablePoint {
     return new GrowingDotRenderablePoint(c, p, this.radius);
   }
 
-  getData(point: Point, index: number, length: number): Data {
+  private getData(point: Point, index: number, length: number): Data {
     if (!this.startTimeMs) return { shouldShow: false }
     const now = Date.now()
     const dt =  now - this.startTimeMs
@@ -86,13 +89,17 @@ export class GrowingDotRenderProvider implements RenderProvider<Data, GrowingDot
 
   onStopAnimationLoop(): void {
   }
+
+  render(point: Point, index: number, length: number) {
+    this.getPoint(this.canvas, point).render(this.getData(point, index, length))
+  }
 }
 
 export function getGrowingEngine(canvas: HTMLCanvasElement) {
   const radius = 2
   return new Engine(
     new RadialRandomWalk(radius, canvas.width, canvas.height, new RadialCollisionDetector()),
-    new GrowingDotRenderProvider(radius, 500, 100),
+    new GrowingDotRenderProvider(canvas, radius, 500, 100),
     canvas
   )
 }

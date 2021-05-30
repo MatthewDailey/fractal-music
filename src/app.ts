@@ -6,4 +6,4 @@ canvas.width = 300
 canvas.height = 485
 
 // @ts-ignore
-window.engine = getShrinkingEngine(canvas)
+window.engine = getGrowingEngine(canvas)

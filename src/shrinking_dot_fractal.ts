@@ -42,7 +42,9 @@ export class ShrinkingDotRenderProvider implements RenderProvider<Data, GrowingD
   private removeTimes: { [k: number]: number } = {}
   private stepsToSave: number = 0
 
-  constructor(private radius: number, private flashTimeStepMs: number = 1000) {}
+  constructor(private canvas: HTMLCanvasElement,
+              private radius: number,
+              private flashTimeStepMs: number = 1000) {}
 
   reset() {
     this.startTimeMs = null
@@ -53,13 +55,13 @@ export class ShrinkingDotRenderProvider implements RenderProvider<Data, GrowingD
     return this.flashTimeStepMs * numDots
   }
 
-  getPoint(c: HTMLCanvasElement, p: Point): GrowingDotRenderablePoint {
+  private getPoint(c: HTMLCanvasElement, p: Point): GrowingDotRenderablePoint {
     return new GrowingDotRenderablePoint(c, p, this.radius);
   }
 
   public incrementStepsToSave = () => this.stepsToSave++
 
-  getData(point: Point, index: number, length: number): Data {
+  private getData(point: Point, index: number, length: number): Data {
     if (!this.startTimeMs) return { shouldShow: false }
 
     const now = Date.now()
@@ -95,11 +97,15 @@ export class ShrinkingDotRenderProvider implements RenderProvider<Data, GrowingD
 
   onStopAnimationLoop(): void {
   }
+
+  render(point: Point, index: number, length: number) {
+    this.getPoint(this.canvas, point).render(this.getData(point, index, length))
+  }
 }
 
 export function getShrinkingEngine(canvas: HTMLCanvasElement) {
   const radius = 10
-  const renderProvider = new ShrinkingDotRenderProvider(radius, 100)
+  const renderProvider = new ShrinkingDotRenderProvider(canvas, radius, 100)
   const engine = new Engine(
     new RadialRandomWalk(radius, canvas.width, canvas.height, new RadialCollisionDetector()),
     renderProvider,

@@ -1,22 +1,21 @@
 import { NewPointAlgo, Point, RenderablePoint, RenderProvider } from "./models"
 
-export class Engine<D, T extends RenderablePoint<D|undefined>> {
-  private fractalPoints: Array<T> = []
+export class Engine {
+  private fractalPoints: Array<Point> = []
   private animationLoopOn = false
 
   constructor(private newPointAlgo: NewPointAlgo,
-              private renderProvider: RenderProvider<D, T>,
+              private renderProvider: RenderProvider<any, any>,
               private canvas: HTMLCanvasElement) {}
 
   public addPoint(point: Point) {
-    this.fractalPoints.push(this.renderProvider.getPoint(this.canvas, point))
+    this.fractalPoints.push(point)
   }
 
   public generatePoint() {
-    const point = this.newPointAlgo.generatePoint(
-      this.fractalPoints.map(p => p.point))
+    const point = this.newPointAlgo.generatePoint(this.fractalPoints)
     if (point) {
-      this.fractalPoints.push(this.renderProvider.getPoint(this.canvas, point))
+      this.fractalPoints.push(point)
       return true
     }
     return false
@@ -48,7 +47,7 @@ export class Engine<D, T extends RenderablePoint<D|undefined>> {
 
   private renderAndUpdateAll() {
     window.requestAnimationFrame(() => this.fractalPoints.forEach((p, i) => {
-      p.render(this.renderProvider.getData(p.point, i, this.fractalPoints.length))
+      this.renderProvider.render(p, i, this.fractalPoints.length)
     }))
   }
 
@@ -74,10 +73,10 @@ export class Engine<D, T extends RenderablePoint<D|undefined>> {
   }
 
   public setPoints(points: Array<Point>) {
-    this.fractalPoints = points.map(p => this.renderProvider.getPoint(this.canvas, p))
+    this.fractalPoints = points
   }
 
-  public getPointsAsJson = () => JSON.stringify(this.fractalPoints.map(p => p.point))
+  public getPointsAsJson = () => JSON.stringify(this.fractalPoints)
 
   public setPointsFromJson = (pointsStr: string) => this.setPoints(JSON.parse(pointsStr))
 }
