@@ -15,7 +15,6 @@ export class ComposingRenderProvider implements RenderProvider {
 
     if (!this.incrementTimeout) {
       const duration = this.providers[this.currentProviderIndex].durationMs(length)
-      console.log("setting timeout for ", duration)
       this.incrementTimeout = setTimeout(() => {
         this.incrementTimeout = null
         this.currentProviderIndex++
@@ -23,8 +22,6 @@ export class ComposingRenderProvider implements RenderProvider {
         if (this.currentProviderIndex < this.providers.length) {
           this.providers[this.currentProviderIndex].onStartAnimationLoop()
         }
-
-        console.log("incremented provider!")
       }, duration)
     }
 
