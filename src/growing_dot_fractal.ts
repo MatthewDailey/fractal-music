@@ -43,6 +43,11 @@ export class GrowingDotRenderProvider implements RenderProvider<Data, GrowingDot
 
   constructor(private radius: number, private flashTimeStepMs: number = 1000, private addTimeStepMs: number = 1000) {}
 
+  reset() {
+    this.startTimeMs = null
+    this.addTimes = {}
+  }
+
   durationMs(numDots: number) {
     return numDots * this.addTimeStepMs + this.flashTimeStepMs
   }

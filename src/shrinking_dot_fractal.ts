@@ -44,6 +44,11 @@ export class ShrinkingDotRenderProvider implements RenderProvider<Data, GrowingD
 
   constructor(private radius: number, private flashTimeStepMs: number = 1000) {}
 
+  reset() {
+    this.startTimeMs = null
+    this.removeTimes = {}
+  }
+
   durationMs(numDots: number) {
     return this.flashTimeStepMs * numDots
   }
