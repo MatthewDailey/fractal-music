@@ -69,7 +69,7 @@ export class ShrinkingDotRenderProvider implements RenderProvider {
 
     const stepSinceStart = dt / this.flashTimeStepMs
 
-    if (stepSinceStart >= length - index && index >= this.stepsToSave) {
+    if (stepSinceStart >= length - index - 1 && index >= this.stepsToSave) {
       if (!this.removeTimes[index]) {
         this.removeTimes[index] = now
       }

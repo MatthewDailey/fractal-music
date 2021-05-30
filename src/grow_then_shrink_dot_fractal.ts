@@ -22,7 +22,7 @@ export function growThenShrinkEngine(canvas: HTMLCanvasElement) {
   )
 
   engine.addPoint({ x: 150, y: 240 })
-  engine.run(9)
+  engine.run(3)
 
   return engine
 }
