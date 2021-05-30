@@ -19,6 +19,12 @@ export class GrowingDotRenderablePoint extends RenderablePoint<Data> {
 
   render(data: Data) {
     if (data.shouldShow) {
+      // clear underneath
+      this.context.beginPath()
+      this.context.arc(this.point.x, this.point.y, this.radius, 0, 2 * Math.PI)
+      this.context.fillStyle = "#FFFFFF00"
+      this.context.fill()
+
       // draw the expanding circle
       this.context.beginPath()
       this.context.arc(this.point.x, this.point.y, this.radius * data.scale, 0, 2 * Math.PI)
