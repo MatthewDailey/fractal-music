@@ -41,6 +41,5 @@ export interface RenderProvider {
   durationMs: (length: number) => number
   reset: () => void
   onStartAnimationLoop: () => void
-  onStopAnimationLoop: () => void
   render(point: Point, index: number, length: number)
 }

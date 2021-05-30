@@ -89,9 +89,6 @@ export class ShrinkingDotRenderProvider implements RenderProvider {
     this.startTimeMs = Date.now()
   }
 
-  onStopAnimationLoop(): void {
-  }
-
   render(point: Point, index: number, length: number) {
     this.getPoint(this.canvas, point).render(this.getData(point, index, length))
   }

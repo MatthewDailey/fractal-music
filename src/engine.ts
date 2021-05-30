@@ -67,16 +67,10 @@ export class Engine {
         this.renderAndUpdateAll()
         if (this.animationLoopOn) {
           window.requestAnimationFrame(render)
-        } else {
-          this.renderProvider.onStopAnimationLoop()
         }
       }
       window.requestAnimationFrame(render)
     }
-  }
-
-  public stopAnimationLoop = () => {
-    this.animationLoopOn = false
   }
 
   public setPoints(points: Array<Point>) {
