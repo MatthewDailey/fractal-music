@@ -67,12 +67,18 @@ export class GrowingDotRenderer implements Renderer {
       const addDt = getDataMs - this.addTimes[index]
       const isFirstExpand = addDt < this.growTimeMs
 
-      const fillStyle = isFirstExpand ? "#000000" : this.fillProvider.getFill(point, index, length)
-
-      return {
-        shouldShow: true,
-        scale: isFirstExpand ? ((addDt % (this.growTimeMs)) / this.growTimeMs) : 1,
-        fillStyle
+      if (isFirstExpand) {
+        return {
+          shouldShow: true,
+          fillStyle: '#000',
+          scale: (addDt % (this.growTimeMs)) / this.growTimeMs
+        }
+      } else {
+        return {
+          shouldShow: true,
+          scale: 1,
+          fillStyle: this.fillProvider.getFill(point, index, length)
+        }
       }
     }
 

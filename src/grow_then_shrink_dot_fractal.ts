@@ -13,7 +13,7 @@ export function growThenShrinkEngine(canvas: HTMLCanvasElement) {
   const addTimeMs = 1000
   const growTimeMs = 1000
   const shrinkTimeMs = 100
-  const colorFadeTime = 100
+  const colorFadeTime = 1000
 
   const providers: Array<Renderer> = []
 
@@ -21,7 +21,7 @@ export function growThenShrinkEngine(canvas: HTMLCanvasElement) {
 
   for (let i = 0; i < 10; i++) {
     providers.push(
-      new GrowingDotRenderer(canvas, radius, fillProvider, growTimeMs, addTimeMs),
+      new GrowingDotRenderer(canvas, radius, llProvider, growTimeMs, addTimeMs),
       new ShrinkingDotRenderer(canvas, radius, fillProvider, shrinkTimeMs)
     )
   }

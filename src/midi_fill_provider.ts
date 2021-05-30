@@ -42,7 +42,6 @@ export class MidiFillProvider implements FillProvider {
     const timeSinceNoteMs = Date.now() - this.mostRecentNoteMs
     if (timeSinceNoteMs < this.decayTimeMs) {
       const alpha = Math.round(100 * ((this.decayTimeMs - timeSinceNoteMs) / this.decayTimeMs))
-      console.log(alpha)
       const color = MidiFillProvider.colors[this.colorIndex]
       return `${color}${alpha.toString(16)}`
     }
