@@ -12,8 +12,8 @@ export function growThenShrinkEngine(canvas: HTMLCanvasElement) {
   const radius = 10
   const addTimeMs = 1000
   const growTimeMs = 1000
-  const shrinkTimeMs = 1000
-  const colorFadeTime = 2000
+  const shrinkTimeMs = 100
+  const colorFadeTime = 100
 
   const providers: Array<Renderer> = []
 
