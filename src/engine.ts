@@ -1,11 +1,11 @@
-import { NewPointAlgo, Point, RenderablePoint, RenderProvider } from "./models"
+import { NewPointAlgo, Point, RenderablePoint, Renderer } from "./models"
 
 export class Engine {
   private fractalPoints: Array<Point> = []
   private animationLoopOn = false
 
   constructor(private newPointAlgo: NewPointAlgo,
-              private renderProvider: RenderProvider,
+              private renderProvider: Renderer,
               private canvas: HTMLCanvasElement) {}
 
   public addPoint(point: Point) {

@@ -37,7 +37,7 @@ export interface NewPointAlgo {
   generatePoint(existingPoints: Array<Point>): Point|undefined
 }
 
-export interface RenderProvider {
+export interface Renderer {
   durationMs: (length: number) => number
   reset: () => void
   onStartAnimationLoop: () => void

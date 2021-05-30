@@ -1,4 +1,4 @@
-import { Point, RenderablePoint, RenderProvider } from "./models"
+import { Point, RenderablePoint, Renderer } from "./models"
 import { Engine } from "./engine"
 import { RadialCollisionDetector, RadialRandomWalk } from "./new_point_algos/random_walk"
 
@@ -31,7 +31,7 @@ export class GrowingDotRenderablePoint extends RenderablePoint<Data> {
 
 }
 
-export class GrowingDotRenderProvider implements RenderProvider {
+export class GrowingDotRenderer implements Renderer {
   private startTimeMs: number|null = null
   private addTimes: { [k: number]: number } = {}
 
@@ -90,7 +90,7 @@ export function getGrowingEngine(canvas: HTMLCanvasElement) {
   const radius = 2
   return new Engine(
     new RadialRandomWalk(radius, canvas.width, canvas.height, new RadialCollisionDetector()),
-    new GrowingDotRenderProvider(canvas, radius, 500, 100),
+    new GrowingDotRenderer(canvas, radius, 500, 100),
     canvas
   )
 }

@@ -1,12 +1,12 @@
-import { Point, RenderProvider } from "./models"
+import { Point, Renderer } from "./models"
 
 
-export class ComposingRenderProvider implements RenderProvider {
+export class ComposingRenderProvider implements Renderer {
   private startTimeMs: number|null = null
   private currentProviderIndex: number = 0
   private incrementTimeout: any = null
 
-  constructor(private providers: Array<RenderProvider>) {}
+  constructor(private providers: Array<Renderer>) {}
 
   render(point: Point, index: number, length: number) {
     if (this.currentProviderIndex >= this.providers.length) {

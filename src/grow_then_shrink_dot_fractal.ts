@@ -1,9 +1,9 @@
 import { ComposingRenderProvider } from "./composing_render_provider"
-import { GrowingDotRenderProvider } from "./growing_dot_fractal"
-import { ShrinkingDotRenderProvider } from "./shrinking_dot_fractal"
+import { GrowingDotRenderer } from "./growing_dot_fractal"
+import { ShrinkingDotRenderer } from "./shrinking_dot_fractal"
 import { Engine } from "./engine"
 import { RadialCollisionDetector, RadialRandomWalk } from "./new_point_algos/random_walk"
-import { RenderProvider } from "./models"
+import { Renderer } from "./models"
 
 
 export function growThenShrinkEngine(canvas: HTMLCanvasElement) {
@@ -12,12 +12,12 @@ export function growThenShrinkEngine(canvas: HTMLCanvasElement) {
   const growTimeMs = 1000
   const shrinkTimeMs = 1000
 
-  const providers: Array<RenderProvider> = []
+  const providers: Array<Renderer> = []
 
   for (let i = 0; i < 10; i++) {
     providers.push(
-      new GrowingDotRenderProvider(canvas, radius, growTimeMs, addTimeMs),
-      new ShrinkingDotRenderProvider(canvas, radius, shrinkTimeMs)
+      new GrowingDotRenderer(canvas, radius, growTimeMs, addTimeMs),
+      new ShrinkingDotRenderer(canvas, radius, shrinkTimeMs)
     )
   }
 
