@@ -1,7 +1,16 @@
 import { Point, RenderProvider } from "./models"
 
 
-export class ComposingRenderProvider<D, T> implements RenderProvider<D, T> {
+export class ComposingRenderProvider implements RenderProvider {
+  private startTimeMs: number|null = null
+
+  constructor(private providers: Array<RenderProvider>) {}
+
+
+
+  render(point: Point, index: number, length: number) {
+  }
+
   durationMs(length: number): number {
     return 0;
   }
@@ -13,13 +22,5 @@ export class ComposingRenderProvider<D, T> implements RenderProvider<D, T> {
   }
 
   reset(): void {
-  }
-
-  getData(point: Point, index: number, length: number): D | undefined {
-    return undefined;
-  }
-
-  getPoint(c: HTMLCanvasElement, p: Point): T {
-    return undefined;
   }
 }

@@ -37,7 +37,7 @@ export class GrowingDotRenderablePoint extends RenderablePoint<Data> {
 
 }
 
-export class ShrinkingDotRenderProvider implements RenderProvider<Data, GrowingDotRenderablePoint> {
+export class ShrinkingDotRenderProvider implements RenderProvider {
   private startTimeMs: number|null = null
   private removeTimes: { [k: number]: number } = {}
   private stepsToSave: number = 0
