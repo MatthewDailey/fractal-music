@@ -12,11 +12,20 @@ export class ComposingRenderProvider implements RenderProvider {
     if (this.currentProviderIndex >= this.providers.length) {
       return
     }
+
     if (!this.incrementTimeout) {
-      setTimeout(() => {
-        this.currentProviderIndex++
+      const duration = this.providers[this.currentProviderIndex].durationMs(length)
+      console.log("setting timeout for ", duration)
+      this.incrementTimeout = setTimeout(() => {
         this.incrementTimeout = null
-      }, this.providers[this.currentProviderIndex].durationMs(length))
+        this.currentProviderIndex++
+
+        if (this.currentProviderIndex < this.providers.length) {
+          this.providers[this.currentProviderIndex].onStartAnimationLoop()
+        }
+
+        console.log("incremented provider!")
+      }, duration)
     }
 
     this.providers[this.currentProviderIndex].render(point, index, length)
@@ -28,6 +37,7 @@ export class ComposingRenderProvider implements RenderProvider {
 
   onStartAnimationLoop(): void {
     this.startTimeMs = Date.now()
+    this.providers[this.currentProviderIndex].onStartAnimationLoop()
   }
 
   onStopAnimationLoop(): void {

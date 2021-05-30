@@ -43,8 +43,8 @@ export class GrowingDotRenderProvider implements RenderProvider {
 
   constructor(private canvas: HTMLCanvasElement,
               private radius: number,
-              private flashTimeStepMs: number = 1000,
-              private addTimeStepMs: number = 1000) {}
+              private growTimeMs: number = 1000,
+              private addTimeMs: number = 1000) {}
 
   reset() {
     this.startTimeMs = null
@@ -52,7 +52,7 @@ export class GrowingDotRenderProvider implements RenderProvider {
   }
 
   durationMs(numDots: number) {
-    return numDots * this.addTimeStepMs + this.flashTimeStepMs
+    return numDots * this.growTimeMs
   }
 
   private getPoint(c: HTMLCanvasElement, p: Point): GrowingDotRenderablePoint {
@@ -64,18 +64,18 @@ export class GrowingDotRenderProvider implements RenderProvider {
     const now = Date.now()
     const dt =  now - this.startTimeMs
 
-    const stepSinceStart = dt / this.addTimeStepMs
+    const stepSinceStart = dt / this.addTimeMs
 
     if (stepSinceStart >= index) {
       if (!this.addTimes[index]) {
         this.addTimes[index] = now
       }
       const addDt = now - this.addTimes[index]
-      const isFirstExpand = addDt < this.flashTimeStepMs
+      const isFirstExpand = addDt < this.growTimeMs
 
       return {
         shouldShow: true,
-        scale: isFirstExpand ? ((addDt % (this.flashTimeStepMs)) / this.flashTimeStepMs) : 1,
+        scale: isFirstExpand ? ((addDt % (this.growTimeMs)) / this.growTimeMs) : 1,
         fillStyle: isFirstExpand ? "#000" : undefined
       }
     }
