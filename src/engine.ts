@@ -5,7 +5,7 @@ export class Engine {
   private animationLoopOn = false
 
   constructor(private newPointAlgo: NewPointAlgo,
-              private renderProvider: RenderProvider<any, any>,
+              private renderProvider: RenderProvider,
               private canvas: HTMLCanvasElement) {}
 
   public addPoint(point: Point) {
@@ -46,9 +46,16 @@ export class Engine {
   }
 
   private renderAndUpdateAll() {
-    window.requestAnimationFrame(() => this.fractalPoints.forEach((p, i) => {
-      this.renderProvider.render(p, i, this.fractalPoints.length)
-    }))
+    window.requestAnimationFrame(() => {
+      const ctx = this.canvas.getContext('2d')
+      if (ctx) {
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      }
+
+      this.fractalPoints.forEach((p, i) => {
+        this.renderProvider.render(p, i, this.fractalPoints.length)
+      })
+    })
   }
 
   public startAnimationLoop = () => {
