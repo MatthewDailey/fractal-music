@@ -46,19 +46,18 @@ export class Engine {
   }
 
   private renderAndUpdateAll() {
-    window.requestAnimationFrame(() => {
-      const ctx = this.canvas.getContext('2d')
-      if (ctx) {
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-      }
+    const ctx = this.canvas.getContext('2d')
+    if (ctx) {
+      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    }
 
-      this.fractalPoints.forEach((p, i) => {
-        this.renderProvider.render(p, i, this.fractalPoints.length)
-      })
+    this.fractalPoints.forEach((p, i) => {
+      this.renderProvider.render(p, i, this.fractalPoints.length)
     })
   }
 
   public startAnimationLoop = () => {
+
     if (!this.animationLoopOn) {
       this.animationLoopOn = true
       this.renderProvider.onStartAnimationLoop()

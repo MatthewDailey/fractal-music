@@ -36,7 +36,6 @@ export class MidiFillProvider implements FillProvider {
 
   getFill(point: Point, index: number, length: number): string {
     if (!this.mostRecentNoteMs) {
-      console.log("no fill")
       return '#ffffff00'
     }
 
