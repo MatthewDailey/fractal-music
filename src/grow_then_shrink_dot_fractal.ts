@@ -4,6 +4,7 @@ import { ShrinkingDotRenderer } from "./shrinking_dot_fractal"
 import { Engine } from "./engine"
 import { RadialCollisionDetector, RadialRandomWalk } from "./new_point_algos/random_walk"
 import { Renderer } from "./models"
+import { WhiteFillProvider } from "./white_fill_provider"
 
 
 export function growThenShrinkEngine(canvas: HTMLCanvasElement) {
@@ -16,8 +17,8 @@ export function growThenShrinkEngine(canvas: HTMLCanvasElement) {
 
   for (let i = 0; i < 10; i++) {
     providers.push(
-      new GrowingDotRenderer(canvas, radius, growTimeMs, addTimeMs),
-      new ShrinkingDotRenderer(canvas, radius, shrinkTimeMs)
+      new GrowingDotRenderer(canvas, radius, new WhiteFillProvider(), growTimeMs, addTimeMs),
+      new ShrinkingDotRenderer(canvas, radius, new WhiteFillProvider(), shrinkTimeMs)
     )
   }
 

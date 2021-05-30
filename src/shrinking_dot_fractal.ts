@@ -1,6 +1,7 @@
-import { Point, RenderablePoint, Renderer } from "./models"
+import { FillProvider, Point, RenderablePoint, Renderer } from "./models"
 import { Engine } from "./engine"
 import { RadialCollisionDetector, RadialRandomWalk } from "./new_point_algos/random_walk"
+import { WhiteFillProvider } from "./white_fill_provider"
 
 
 type Data = {
@@ -38,6 +39,7 @@ export class ShrinkingDotRenderer implements Renderer {
 
   constructor(private canvas: HTMLCanvasElement,
               private radius: number,
+              private fillProvider: FillProvider,
               private flashTimeStepMs: number = 1000) {}
 
   reset() {
@@ -74,6 +76,7 @@ export class ShrinkingDotRenderer implements Renderer {
         return {
           shouldShow: true,
           scale: 1 - ((removeDt % (this.flashTimeStepMs)) / this.flashTimeStepMs),
+          fillStyle: this.fillProvider.getFill(point, index, length)
         }
       } else {
         return {
@@ -82,7 +85,7 @@ export class ShrinkingDotRenderer implements Renderer {
       }
     }
 
-    return { shouldShow: true, scale: 1 }
+    return { shouldShow: true, scale: 1, fillStyle: this.fillProvider.getFill(point, index, length) }
   }
 
   onStartAnimationLoop(): void {
@@ -96,7 +99,7 @@ export class ShrinkingDotRenderer implements Renderer {
 
 export function getShrinkingEngine(canvas: HTMLCanvasElement) {
   const radius = 10
-  const renderProvider = new ShrinkingDotRenderer(canvas, radius, 100)
+  const renderProvider = new ShrinkingDotRenderer(canvas, radius, new WhiteFillProvider(), 100)
   const engine = new Engine(
     new RadialRandomWalk(radius, canvas.width, canvas.height, new RadialCollisionDetector()),
     renderProvider,

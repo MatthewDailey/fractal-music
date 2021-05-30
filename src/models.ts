@@ -43,3 +43,7 @@ export interface Renderer {
   onStartAnimationLoop: () => void
   render(point: Point, index: number, length: number)
 }
+
+export interface FillProvider {
+  getFill(point: Point, index: number, length: number): string
+}

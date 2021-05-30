@@ -1,6 +1,7 @@
-import { Point, RenderablePoint, Renderer } from "./models"
+import { FillProvider, Point, RenderablePoint, Renderer } from "./models"
 import { Engine } from "./engine"
 import { RadialCollisionDetector, RadialRandomWalk } from "./new_point_algos/random_walk"
+import { WhiteFillProvider } from "./white_fill_provider"
 
 
 type Data = {
@@ -37,6 +38,7 @@ export class GrowingDotRenderer implements Renderer {
 
   constructor(private canvas: HTMLCanvasElement,
               private radius: number,
+              private fillProvider: FillProvider,
               private growTimeMs: number = 1000,
               private addTimeMs: number = 1000) {}
 
@@ -70,7 +72,7 @@ export class GrowingDotRenderer implements Renderer {
       return {
         shouldShow: true,
         scale: isFirstExpand ? ((addDt % (this.growTimeMs)) / this.growTimeMs) : 1,
-        fillStyle: isFirstExpand ? "#000" : undefined
+        fillStyle: isFirstExpand ? "#000" : this.fillProvider.getFill(point, index, length)
       }
     }
 
@@ -90,7 +92,7 @@ export function getGrowingEngine(canvas: HTMLCanvasElement) {
   const radius = 2
   return new Engine(
     new RadialRandomWalk(radius, canvas.width, canvas.height, new RadialCollisionDetector()),
-    new GrowingDotRenderer(canvas, radius, 500, 100),
+    new GrowingDotRenderer(canvas, radius, new WhiteFillProvider(), 500, 100),
     canvas
   )
 }
