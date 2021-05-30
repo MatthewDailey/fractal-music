@@ -44,6 +44,10 @@ export class ShrinkingDotRenderProvider implements RenderProvider<Data, GrowingD
 
   constructor(private radius: number, private flashTimeStepMs: number = 1000) {}
 
+  durationMs(numDots: number) {
+    return this.flashTimeStepMs * numDots
+  }
+
   getPoint(c: HTMLCanvasElement, p: Point): GrowingDotRenderablePoint {
     return new GrowingDotRenderablePoint(c, p, this.radius);
   }

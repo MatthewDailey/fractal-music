@@ -38,6 +38,7 @@ export interface NewPointAlgo {
 }
 
 export interface RenderProvider<D, T extends RenderablePoint<D>> {
+  durationMs: (length: number) => number
   onStartAnimationLoop: () => void
   onStopAnimationLoop: () => void
   getPoint(c: HTMLCanvasElement, p: Point): T
